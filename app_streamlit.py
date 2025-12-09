@@ -71,11 +71,18 @@ def create_google_doc_copy_and_replace(user_data: dict):
     docs_service, drive_service, _ = get_api_clients()
     # copy template
     title = f"BBNT_{user_data.get('ma_tram', 'Unknown')}_{user_data.get('Thang', '')}_{int(time.time())}"
+   
+    TARGET_FOLDER_ID = "1k9isJyWgX3fq2Lh_FEIDwvMPbYxvI3bW"
+
     copied = drive_service.files().copy(
         fileId=TEMPLATE_DOC_ID,
-        body={"name": title},
+        body={
+            "name": title,
+            "parents": [TARGET_FOLDER_ID]
+        },
         supportsAllDrives=True
     ).execute()
+
     new_doc_id = copied.get("id")
 
     # compute derived fields (same logic as original)
